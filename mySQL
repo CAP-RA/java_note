@@ -1,0 +1,5 @@
+select * from table_name:可视化数据库 
+insert into table_name values(parameters);插入数据  
+delete from table_name where id="";删除数据 
+update table_name set parameters = "value" where id = "";修改数据
+create table table_name(id int auto_inplement,name varchar(16),...)
