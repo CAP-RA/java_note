@@ -1,0 +1,21 @@
+//针对JavaEE中的绝对路径和相对路径自己的心得体会：
+<form action=<%=request.getContextPath()+"/register_do"%> method="post">
+	<table>
+		<tr>
+			<td>userName:</td><td><input type="text" name="userName"/></td>
+	</table>
+</form>
+其中，form的action属性的值设置为绝对地址时应设置为：<%=request.getContextPath()+"/工程目录下的相对路径"%>,request.getContextPath()用于获得当前项目工程文件名。
+
+
+在servlet文件中，也就是在对网页进行跳转时进行处理的文件中,应注意以下：
+
+response.sendRedirect(request.getContextPath()+"/goods_LIST");
+在用response.sendRedirect()进行重定向时，不会携带数据，而且此为“客户端路径”，也就是系统不会自动在路径上加上项目工程文件名，即系统只在路径前加上"http://localhost:8080"，而不会
+自动加上工程文件名，工程文件名需要利用"request.getContextPath()"得到。
+
+request.getRequestDispatcher("/goods_LIST").forward(request, response);
+在用request.getRequestDispatcher()进行网页跳转时，会携带数据，而且括弧中所带的路径如果要用“绝对路径”时，只需要“/+ servlet的相对工程文件名路径”，即括弧中的路径只需要是“服务器绝对路径”，
+系统会自动在前面加上 "http://localhost:8080/文件名"
+
+			
