@@ -18,4 +18,44 @@ request.getRequestDispatcher("/goods_LIST").forward(request, response);
 在用request.getRequestDispatcher()进行网页跳转时，会携带数据，而且括弧中所带的路径如果要用“绝对路径”时，只需要“/+ servlet的相对工程文件名路径”，即括弧中的路径只需要是“服务器绝对路径”，
 系统会自动在前面加上 "http://localhost:8080/文件名"
 
-			
+
+服务器绝对路径：“/工程文件名下相对路径”。--------系统自动加上"http://localhost:8080/文件名"
+客户观绝对路径：request.getContextPath()+“/工程文件名下相对路径。----------系统自动加上”"http://localhost:8080"
+相对（工程文件名）路径：“工程文件名下相对路径”
+request 要用绝对路径时用服务器绝对路径
+response 要用绝对路径时用客户端绝对路径
+
+	
+实例：
+login.jsp放在web04/login/login.jsp
+register.jsp放在web04/register/register.jsp
+index.jsp放在web04/index.jsp
+
+
+goodsServlet.java-------@WebServlet("/goods_LIST")
+放在web04/goodsServlet.java
+
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	String userName = request.getParameter("userName");
+	String password = request.getParameter("password");
+	User user = userDB.isExisted(userName, password);
+	if(user!=null)
+	{
+		if(user.getisAdmin())
+		{
+			//request.setAttribute("message",	"hello admin:"+user.getuserName());
+			response.sendRedirect(request.getContextPath()+"/goods_LIST");
+			//request.getRequestDispatcher("/goods_LIST").forward(request, response);
+		}
+		else
+		{
+			request.getSession().setAttribute("user", user);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		}
+	}
+	else
+	{
+		request.setAttribute("message","<font color='red'>the userName or password is wrong please try agin!</font>");
+		request.getRequestDispatcher("/login/login.jsp").forward(request, response);
+	}
+}	
